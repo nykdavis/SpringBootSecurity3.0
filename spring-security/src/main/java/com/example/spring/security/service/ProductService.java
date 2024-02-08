@@ -30,5 +30,12 @@ public class ProductService {
 	public List<Product> getProducts(){
 		return productList;
 	}
+	
+	public Product getProduct(int id) {
+		return productList.stream()
+				.filter(product -> product.getProductId() == id)
+				.findAny()
+				.orElseThrow(()-> new RuntimeException("product "+id+" not found."));
+	}
 
 }
