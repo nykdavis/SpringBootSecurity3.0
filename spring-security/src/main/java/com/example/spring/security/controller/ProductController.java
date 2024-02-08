@@ -3,6 +3,7 @@ package com.example.spring.security.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,17 +20,30 @@ public class ProductController {
 	private ProductService service;
 	
 	
+	/*
+	 * Anyone can access without authentication
+	 */
 	@GetMapping("/welcome")
 	public String welcome() {
 		return "Welcome this end pointis not secure";
 	}
 	
+	
+	/*
+	 * This method call be accessed by the admin only
+	 */
 	@GetMapping("/all")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public List<Product> getAllTheProduct(){
 		return service.getProducts();
 	}
 	
+	
+	/*
+	 * This method call be accessed by the user only
+	 */
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('ROLE_USER')")
 	public Product getProductById(@PathVariable int id) {
 		return service.getProduct(id);
 	}
